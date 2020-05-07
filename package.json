@@ -11,6 +11,9 @@
     "build": "gulp build"
   },
   "devDependencies": {
+    "@babel/core": "7.9.6",
+    "@babel/preset-env": "7.9.6",
+    "@babel/register": "7.9.0",
     "gulp": "4.0.2"
   }
 }
