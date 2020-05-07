@@ -1,6 +1,8 @@
 // 최신 JS 문법 사용
 import gulp from "gulp";
 import gulpPug from "gulp-pug";
+// 청소도구 설치
+import del from "del";
 
 // task 하기 위해선 function을 eport하거나 const하면 된다.
 /* 
@@ -16,15 +18,20 @@ import gulpPug from "gulp-pug";
 // task 만들기 -> pug파일을 HTML파일로 바꾸기 -> gulp-pug 플러그인 사용
 const routes = {
   pug: {
-    src: "src/**/*.pug", // (* 하나는 src에 있는 모든 pug파일 전부), /**/ -> 깊게 찾지 않는다. 즉, 지금은 index.pug만 html로 바꿈
+    src: "src/*.pug", // (* 하나는 src에 있는 모든 pug파일을 html로 바꿈), /**/ -> 깊게 찾지 않는다. 즉, 지금은 index.pug만 html로 바꿈
     dest: "build", // 목적지(destination)
   },
 };
 
 // pipe란 하나의 흐름으로 만들어준다.
 // 순서 - 1.routes에서 데이터 가져온다/2. pipe로 흐름을 만들어서 pug()에 넣어준다./3. 그 파일들을 dest에 저장시킨다.
-export const pug = () => {
+// (export는 필요없다. package.json에서 쓸 command만 해주면 된다., export 안하면 console이나 package.json에서 사용 못함)
+const pug = () =>
   gulp.src(routes.pug.src).pipe(gulpPug()).pipe(gulp.dest(routes.pug.dest));
-};
+const clean = () => del(["build"]); // 안에 확장자나 파일 이름을 넣는다.
 
-export const dev = gulp.series([pug]);
+// 분리하기
+const prepare = gulp.series([clean]);
+const asset = gulp.series([pug]);
+
+export const dev = gulp.series([prepare, asset]);
