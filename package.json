@@ -1,0 +1,16 @@
+{
+  "name": "super-gulp",
+  "version": "1.0.0",
+  "description": "learn gulp",
+  "main": "index.js",
+  "repository": "https://github.com/jjunnnys/super-gulp.git",
+  "author": "ppby <salswnss@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "gulp dev",
+    "build": "gulp build"
+  },
+  "devDependencies": {
+    "gulp": "4.0.2"
+  }
+}
