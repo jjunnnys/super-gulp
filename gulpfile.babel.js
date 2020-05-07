@@ -18,6 +18,7 @@ import ws from "gulp-webserver";
 // task 만들기 -> pug파일을 HTML파일로 바꾸기 -> gulp-pug 플러그인 사용
 const routes = {
   pug: {
+    watch: "src/**/*.pug", //모든 파일을 지켜보고 싶다는 뜻(이유는 depth가 깊은 곳도 변경사항을 알아야하기 때문)
     src: "src/*.pug", // (* 하나는 src에 있는 모든 pug파일을 html로 바꿈), /**/ -> 깊게 찾지 않는다. 즉, 지금은 index.pug만 html로 바꿈
     dest: "build", // 목적지(destination)
   },
@@ -28,16 +29,20 @@ const routes = {
 // (export는 필요없다. package.json에서 쓸 command만 해주면 된다., export 안하면 console이나 package.json에서 사용 못함)
 const pug = () =>
   gulp.src(routes.pug.src).pipe(gulpPug()).pipe(gulp.dest(routes.pug.dest));
-const clean = () => del(["build"]); // 안에 확장자나 파일 이름을 넣는다.
+const clean = () => del(["build/"]); // 안에 확장자나 파일 이름을 넣는다.
 
 // src를 찾고 그 src는 서버에서 보여주고 싶은 폴더 (우릭가 보여주고 싶은 폴더는 build)
 const webserver = () => {
   gulp.src("build").pipe(ws({ livereload: true, open: true }));
 }; // 파일을 저장하면 알아서 새로고침해줌, 브라우저에서 로컬호스트를 열고 path를 입력하면 알아서 이동함
 
+const watch = () => {
+  gulp.watch(routes.pug.watch, pug); // 어떤 걸 지켜볼 거냐, 어떤 task를 실행할 거냐
+};
+
 // 분리하기
 const prepare = gulp.series([clean]);
 const asset = gulp.series([pug]);
-const postDev = gulp.series([webserver]);
+const postDev = gulp.series([webserver, watch]);
 
 export const dev = gulp.series([prepare, asset, postDev]);
