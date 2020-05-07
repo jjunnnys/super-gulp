@@ -1,8 +1,8 @@
 // 최신 JS 문법 사용
 import gulp from "gulp";
 import gulpPug from "gulp-pug";
-// 청소도구 설치
-import del from "del";
+import del from "del"; // 청소도구 설치
+import ws from "gulp-webserver";
 
 // task 하기 위해선 function을 eport하거나 const하면 된다.
 /* 
@@ -30,8 +30,14 @@ const pug = () =>
   gulp.src(routes.pug.src).pipe(gulpPug()).pipe(gulp.dest(routes.pug.dest));
 const clean = () => del(["build"]); // 안에 확장자나 파일 이름을 넣는다.
 
+// src를 찾고 그 src는 서버에서 보여주고 싶은 폴더 (우릭가 보여주고 싶은 폴더는 build)
+const webserver = () => {
+  gulp.src("build").pipe(ws({ livereload: true, open: true }));
+}; // 파일을 저장하면 알아서 새로고침해줌, 브라우저에서 로컬호스트를 열고 path를 입력하면 알아서 이동함
+
 // 분리하기
 const prepare = gulp.series([clean]);
 const asset = gulp.series([pug]);
+const postDev = gulp.series([webserver]);
 
-export const dev = gulp.series([prepare, asset]);
+export const dev = gulp.series([prepare, asset, postDev]);
