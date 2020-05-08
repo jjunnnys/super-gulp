@@ -4,6 +4,8 @@ import del from "del";
 import ws from "gulp-webserver";
 import image from "gulp-image";
 import sass from "gulp-sass";
+import autoprefixer from "gulp-autoprefixer";
+import miniCSS from "gulp-csso";
 
 sass.compiler = require("node-sass");
 
@@ -35,10 +37,17 @@ const webserver = () =>
 const img = () =>
   gulp.src(routes.img.src).pipe(image()).pipe(gulp.dest(routes.img.dest));
 
+// 원하는 건 뭐든 pipe로 추가할 수 있다.
 const styles = () =>
   gulp
     .src(routes.scss.src)
     .pipe(sass().on("error", sass.logError))
+    .pipe(
+      autoprefixer({
+        browsers: ["last 2 versions"], // 브라우저들의 2단계 밑에 버전까지 지원함
+      })
+    )
+    .pipe(miniCSS())
     .pipe(gulp.dest(routes.scss.dest));
 
 const watch = () => {
