@@ -1,6 +1,0 @@
-.env
-.next
-node_modules
-.vs_code
-yarn.lock
-build/
